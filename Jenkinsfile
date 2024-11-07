@@ -1,22 +1,32 @@
-pipeline {
-    agent any
+pipeline{
+    agent any 
     stages{
         stage("checkout"){
             steps{
-                checkut scm
+                checkout scm
             }
         }
-
+        stage ("version check"){
+            steps{
+                sh "node --version"
+                sh "npm --version"
+            }
+        }
         stage("Test"){
             steps{
-                sh 'sudo npm install'
+                sh 'npm install'
                 sh 'npm test'
+     //         sh 'npx mocha'
             }
         }
-
         stage("Build"){
             steps{
                 sh 'npm run build'
+            }
+        }
+       stage("Build Image" ){
+            steps{
+                sh 'docker build -t my-node-app:1.0 .'
             }
         }
     }
